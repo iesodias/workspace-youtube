@@ -1,11 +1,9 @@
 name: Deploy Azure Storage Account
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ main ]
-    paths:
-      - 'files/storage.bicep'  # Update path to your storage Bicep file
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -39,4 +37,3 @@ jobs:
                 storageAccountName="stg${SHORT_RUN_ID}" \
                 location='eastus' \
                 storageAccountType='Standard_LRS'
-  

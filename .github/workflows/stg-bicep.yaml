@@ -38,4 +38,4 @@ jobs:
             --parameters \
                 storageAccountName="stg${SHORT_RUN_ID}" \
                 location='eastus' \
-                storageAccountType='Standard_LRS'd
+                storageAccountType='Standard_LRS'

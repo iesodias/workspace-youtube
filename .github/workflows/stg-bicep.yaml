@@ -34,8 +34,8 @@ jobs:
           SHORT_RUN_ID=$(echo "${{ github.run_id }}" | tail -c 4)
           az deployment group create \
             --resource-group bicep-rg \
-            --template-file files/storage.bicep \
+            --template-file files/storage_account.bicep \
             --parameters \
                 storageAccountName="stg${SHORT_RUN_ID}" \
                 location='eastus' \
-                storageAccountType='Standard_LRS'
+                storageAccountType='Standard_LRS'd

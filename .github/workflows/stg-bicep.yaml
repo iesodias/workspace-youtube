@@ -30,12 +30,48 @@ jobs:
           fi
 
       - name: Deploy Storage Account
+        run: |c
+          SHORT_RUN_ID=$(echo "${{ github.run_id }}" | tail -c 4)
+          az deployment group create \
+            --resource-group bicep-rg \
+            --template-file files/name: Deploy Azure Storage Account
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'files/storage.bicep'  # Update path to your storage Bicep file
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Check/Create Resource Group
+        id: rg-check
+        run: |
+          if ! az group show --name bicep-rg --query id -o tsv 2>/dev/null; then
+            az group create --name bicep-rg --location eastus
+            echo "Resource Group created"
+          else
+            echo "Resource Group already exists"
+          fi
+
+      - name: Deploy Storage Account
         run: |
           SHORT_RUN_ID=$(echo "${{ github.run_id }}" | tail -c 4)
           az deployment group create \
             --resource-group bicep-rg \
-            --template-file files/storage.bicep \
+            --template-file files/storage_account.bicep \
             --parameters \
                 storageAccountName="stg${SHORT_RUN_ID}" \
                 location='eastus' \
-                storageAccountType='Standard_LRS'
+                storageAccountType='Standard_LRS' \

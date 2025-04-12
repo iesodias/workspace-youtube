@@ -3,9 +3,9 @@ name: Deploy Azure Storage Account
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
-      - 'files/storage_account'
+      - 'files/storage.bicep'  # Update path to your storage Bicep file
 
 jobs:
   deploy:
@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Login no Azure
-        uses: azure/login@v2
+
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+
       - name: Check/Create Resource Group
         id: rg-check
         run: |
@@ -32,10 +32,10 @@ jobs:
       - name: Deploy Storage Account
         run: |
           SHORT_RUN_ID=$(echo "${{ github.run_id }}" | tail -c 4)
-          deploy az deploy group create \
-          --resource-group bicep-rg \
-          --template-file files/storage_account.bicep \
-          --parameters \
-              storageAccountName="stg${SHORT_RUN_ID}" \
-              location='eastus' \
-              storageAccountType='Standard_LRS'
+          az deployment group create \
+            --resource-group bicep-rg \
+            --template-file files/storage.bicep \
+            --parameters \
+                storageAccountName="stg${SHORT_RUN_ID}" \
+                location='eastus' \
+                storageAccountType='Standard_LRS'

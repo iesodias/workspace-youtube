@@ -42,7 +42,6 @@ resource stg 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   tags: tags
 }
 
-// Outputs
 @description('Storage Account name')
 output storageAccountName string = stg.name
 

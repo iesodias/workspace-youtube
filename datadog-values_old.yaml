@@ -1,0 +1,23 @@
+datadog:
+  apiKeyExistingSecret: "datadog-secret"
+  logs:
+    enabled: true
+    containerCollectAll: true
+  hostname: "aks-free-node"
+  hostnameForceConfigAsCanonical: true
+  kubelet:
+    tlsVerify: false
+
+agents:
+  useHostPID: true
+  containers:
+    agent:
+      env:
+        - name: DD_HOSTNAME
+          value: "aks-free-node"
+
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+
